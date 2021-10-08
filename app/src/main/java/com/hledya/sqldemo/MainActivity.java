@@ -34,14 +34,21 @@ public class MainActivity extends AppCompatActivity {
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CustomerModel customerModel = null;
                 try{
-                    CustomerModel customerModel = new CustomerModel(-1,  et_name.getText().toString(),
+                    customerModel = new CustomerModel(-1,  et_name.getText().toString(),
                             Integer.parseInt(et_age.getText().toString()), sw_activeCustomer.isChecked());
                     Toast.makeText(MainActivity.this, customerModel.toString(), Toast.LENGTH_SHORT).show();
                 }
                 catch(Exception e){
                     Toast.makeText(MainActivity.this, "invalid input", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
+                boolean success = dataBaseHelper.addOne(customerModel);
+                Toast.makeText(MainActivity.this, "addOne returned "+success, Toast.LENGTH_SHORT).show();
+
             }
         });
 
