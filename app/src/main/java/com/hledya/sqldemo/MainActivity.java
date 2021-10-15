@@ -2,6 +2,7 @@ package com.hledya.sqldemo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -53,12 +54,9 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                boolean success = dataBaseHelper.addOne(customerModel);
-                Toast.makeText(MainActivity.this, "addOne returned "+success, Toast.LENGTH_SHORT).show();
-                if (success){
-                    showCustomersOnListView();
-                }
-
+//                boolean success = dataBaseHelper.addOne(customerModel);
+                AddOneTask task = new AddOneTask();
+                task.execute(customerModel);
             }
         });
 
@@ -78,6 +76,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private class AddOneTask extends AsyncTask<CustomerModel, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(CustomerModel... customerModels) {
+            return dataBaseHelper.addOne(customerModels[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+//            super.onPostExecute(aBoolean);
+            Toast.makeText(MainActivity.this, "addOne returned "+success, Toast.LENGTH_SHORT).show();
+            if (success){
+                showCustomersOnListView();
+            }
+        }
     }
 
     private void showCustomersOnListView(){
